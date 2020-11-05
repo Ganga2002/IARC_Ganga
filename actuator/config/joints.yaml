@@ -1,0 +1,10 @@
+# Publish the current joint states --------------------
+joint_state_controller:
+  type: joint_state_controller/JointStateController
+  publish_rate: 50
+
+# Position Controller ---------------------------------
+rod_position_controller:
+  type: effort_controllers/JointPositionController
+  joint: actuator_joint
+  pid: {p: 2000, i: 100, d: 200}

@@ -1,0 +1,124 @@
+<?xml version="1.0" encoding="utf-8"?>
+<!-- This URDF was automatically created by SolidWorks to URDF Exporter! Originally created by Stephen Brawner (brawner@gmail.com) 
+     Commit Version: 1.5.1-0-g916b5db  Build Version: 1.5.7152.31018
+     For more information, please see http://wiki.ros.org/sw_urdf_exporter -->
+<robot
+  name="actuator">
+  <static>1 0 0</static>
+  <link
+    name="base_link">
+    <inertial>
+      <origin
+        xyz="0.102698693078248 0.185507014938219 0.237856750752446"
+        rpy="0 0 0" />
+      <mass
+        value="3" />
+      <inertia
+        ixx="5"
+        ixy="2.10539538122137E-10"
+        ixz="-3.27608375773942E-10"
+        iyy="5"
+        iyz="-0.00024038463225421"
+        izz="5" />
+    </inertial>
+    <visual>
+      <origin
+        xyz="0 0 0"
+        rpy="0 0 0" />
+      <geometry>
+        <mesh
+          filename="package://actuator/meshes/base_link.STL" />
+      </geometry>
+      <material
+        name="">
+        <color
+          rgba="0.666666666666667 0.698039215686274 0.768627450980392 1" />
+      </material>
+    </visual>
+    <collision>
+      <origin
+        xyz="0 0 0"
+        rpy="0 0 0" />
+      <geometry>
+        <mesh
+          filename="package://actuator/meshes/base_link.STL" />
+      </geometry>
+    </collision>
+  </link>
+
+  <link
+    name="actuator_rod">
+    <inertial>
+      <origin
+        xyz="-6.12794875953782E-09 0.0860228529586428 -3.0171669812562E-07"
+        rpy="0 0 0" />
+      <mass
+        value="0.141742027033077" />
+      <inertia
+        ixx="0.000339567153215789"
+        ixy="3.01174317665818E-11"
+        ixz="2.43429637951659E-11"
+        iyy="7.06680060554459E-06"
+        iyz="1.19300588695323E-10"
+        izz="0.000339620238575842" />
+    </inertial>
+    <visual>
+      <origin
+        xyz="0 0 0"
+        rpy="0 0 0" />
+      <geometry>
+        <mesh
+          filename="package://actuator/meshes/actuator rod.STL" />
+      </geometry>
+      <material
+        name="">
+        <color
+          rgba="0.796078431372549 0.823529411764706 0.937254901960784 1" />
+      </material>
+    </visual>
+    <collision>
+      <origin
+        xyz="0 0 0"
+        rpy="0 0 0" />
+      <geometry>
+        <mesh
+          filename="package://actuator/meshes/actuator rod.STL" />
+      </geometry>
+    </collision>
+  </link>
+
+  <joint
+    name="actuator_joint"
+    type="prismatic">
+    <origin
+      xyz="0.1027 -0.47008 0.19302"
+      rpy="-3.1416 -1.4241 3.1416" />
+    <parent
+      link="base_link" />
+    <child
+      link="actuator_rod" />
+    <axis
+      xyz="0 0 1" />
+    <limit
+      lower="-1"
+      upper="1"
+      effort="1000"
+      velocity="0.5" />
+  </joint>
+
+  <transmission name="rod_trans" type="SimpleTransmission">
+    <type>transmission_interface/SimpleTransmission</type>
+    <actuator name="Rod_Motor">
+      <mechanicalReduction>1</mechanicalReduction>
+    </actuator>
+    <joint name="actuator_joint">
+      <hardwareInterface>EffortJointInterface</hardwareInterface>
+    </joint>
+  </transmission>
+
+  <gazebo>
+    <plugin name="gazebo_ros_control" filename="libgazebo_ros_control.so">
+    </plugin>
+  </gazebo>
+
+</robot>

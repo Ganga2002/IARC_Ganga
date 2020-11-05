@@ -1,0 +1,57 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<launch>
+
+  <arg name="world" default="$(find env)/worlds/env_final.world"/> 
+  <arg name="paused" default="true"/>
+  <arg name="use_sim_time" default="true"/>
+  <arg name="gui" default="true"/>
+  <arg name="headless" default="false"/>
+  <arg name="debug" default="false"/>
+  
+  <!--arg from the diff_drive.launch-->
+  <arg name="model" default="$(find bot1)/urdf/lights.urdf"/>
+
+
+  <include file="$(find gazebo_ros)/launch/empty_world.launch">
+    <arg name="paused" value="$(arg paused)"/>
+    <arg name="use_sim_time" value="$(arg use_sim_time)"/>
+    <arg name="gui" value="$(arg gui)"/>
+    <arg name="headless" value="$(arg headless)"/>
+    <arg name="debug" value="$(arg debug)"/>
+    <!--arg name="world_name" value="$(arg world)"/-->
+  </include>
+
+    <group ns="/actuator"> 
+
+        <!-- Robot model -->
+        <param name="robot_description" command="$(find xacro)/xacro --inorder '$(find actuator)/urdf/actuator_original.urdf'" />
+        <arg name="x" default="0"/>
+        <arg name="y" default="0"/>
+        <arg name="z" default="0"/>
+        <rosparam command="load" file="$(find actuator)/config/joints.yaml" />
+        
+        <!-- Spawn the robot model -->
+        <node name="spawn_des" pkg="gazebo_ros" type="spawn_model" output="screen"
+              args="-urdf -param robot_description -model actuator -x $(arg x) -y $(arg y) -z $(arg z)" />
+        
+        <node name="robot_state_publisher" pkg="robot_state_publisher" type="state_publisher"/>
+
+        <node name="actuator_controller_spawner" pkg="controller_manager" type="spawner"
+            respawn="false" output="screen" ns="/actuator"
+            args="--namespace=/actuator
+            joint_state_controller
+            rod_position_controller
+            --timeout 300">
+        </node>
+
+  <node
+    name="tf_footprint_base"
+    pkg="tf"
+    type="static_transform_publisher"
+    args="0 0 0 0 0 0 base_link base_footprint 40" />
+
+        <!-- rqt >
+        <node name="rqt_reconfigure" pkg="rqt_reconfigure" type="rqt_reconfigure" />
+        <node name="rqt_publisher" pkg="rqt_publisher" type="rqt_publisher" /-->
+    </group>      
+</launch>
